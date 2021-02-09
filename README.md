@@ -1,4 +1,4 @@
-#API & Contador de Pessoas
+# API & Contador de Pessoas
 Utilização de API desenvolvida em NodeJS para consumir dados enviados pelo algoritmo de detecção, no caso foi utilizado o Yolo.
 
 ---
