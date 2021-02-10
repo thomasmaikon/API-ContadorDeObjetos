@@ -3,7 +3,11 @@ Utilização de API desenvolvida em NodeJS para consumir dados enviados pelo alg
 
 ---
 
+# Utilização do Contador-de-Objetos
+Para poder efetuar a utilização do algoritmo em python disponibilizado é preciso seguir os passos abaixo.  
 
+ 1. Baixar o arquivo [`yolov3.weights`](https://pjreddie.com/media/files/yolov3.weights)  
+ 2. Inserir o arquivo dentro da pasta yoloDados  
 
 
 ## :warning: Status do projeto 
@@ -12,5 +16,5 @@ Utilização de API desenvolvida em NodeJS para consumir dados enviados pelo alg
 
 ## :rocket: Ferramentas utilizadas
 - [NodeJS](https://nodejs.org/en/) 10.19.0
-- [pyhton](https://www.python.org/) 3.8
+- [Pyhton](https://www.python.org/) 3.8
  
