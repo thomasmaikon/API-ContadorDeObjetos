@@ -9,6 +9,9 @@ Para poder efetuar a utilização do algoritmo em python disponibilizado é prec
  1. Baixar o arquivo [`yolov3.weights`](https://pjreddie.com/media/files/yolov3.weights)  
  2. Inserir o arquivo dentro da pasta yoloDados  
 
+## Yolo
+O opencv foi utilizado como base para utilização do yolo
+
 
 ## :warning: Status do projeto 
 :construction: Sistema em desenvolvimento... :construction:  

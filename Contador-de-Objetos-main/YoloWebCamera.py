@@ -104,11 +104,16 @@ def contarPessoas():
                     # Coloca o texto nos objetos detectados
                     cv2.putText(frame, str(pessoas) + text_box_current, (x_min, y_min - 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, colour_box_current, 2)
 
+
+        cv2.imshow('YOLO v3 WebCamera', frame)
+        k = cv2.waitKey(1)   # caso remova ele, o opencv nao exibe a imagem
+        if k % 256 == 27:
+            break
+
         #cv2.imwrite("ImagemGerada.png", frame)
         stop = time.time()
         tempo = stop - start
-        cv2.namedWindow('YOLO v3 WebCamera', cv2.WINDOW_NORMAL)
-        cv2.imshow('YOLO v3 WebCamera', frame)
+        
         print("quantidade de pessoas:-> " + str(pessoas))
         print("tempo: " + str(tempo))
         #arquivo = open('qtdPessoas.txt', 'w')
