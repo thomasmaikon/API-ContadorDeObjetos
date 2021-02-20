@@ -7,12 +7,13 @@ const debug = require('debug')('nodestr:server');
 
 
 const porta = procurandoPorta(process.env.PORT || '3000'); 
+const host = '0.0.0.0'
 aplicacao.set('port',porta);
 
 
 const server = HTTP.createServer(aplicacao);
 
-server.listen(porta);
+server.listen(porta, host);
 server.on('error',temErro)
 console.log('Ouvindo na porta:' + porta);
 
