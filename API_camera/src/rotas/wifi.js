@@ -1,7 +1,7 @@
 const express = require('express');
 const rotas = express.Router();
 
-const dadosController = require('../controllers/dados-controller')
+const dadosController = require('../controllers/wifi-controller')
 
 rotas.get('/',dadosController.get);
 

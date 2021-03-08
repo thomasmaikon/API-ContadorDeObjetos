@@ -125,8 +125,11 @@ def contarPessoas():
 
 def enviarOsDados(qtd):
     start = time.time()
+    tempo = time.ctime()
+    tempo = tempo.split()
     url = "http://localhost:3000/dadosCamera/"
-    payload = {"ip": 12, "quantity": qtd, }
+    payload = {"quantity": qtd, "hora": tempo[3][0:5]}
+    print(payload)
     r = requests.post(url, data=payload)
     print("tempo de envio: ")
     print(time.time()-start)
