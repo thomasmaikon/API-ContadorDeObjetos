@@ -1,9 +1,14 @@
-def contarPessoas():
+
+token = 1
+
+def contarPessoas(number, video, next):
     # Necessário para criar o arquivo contendo os objectos detectados
     from csv import DictWriter
+    contagem_iteracoes = 0
+    vetQTD = []
 
     # Defini qual camera será utilizada na captura
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(video)
 
     # Cria variáveis para captura de altura e largura
     h, w = None, None
@@ -12,7 +17,8 @@ def contarPessoas():
     with open('yoloDados/YoloNames.names') as f:
         # cria uma lista com todos os nomes
         labels = [line.strip() for line in f]
-
+    # Necessário para criar o arquivo contendo os objectos detectados
+    from csv import DictWriter
     # carrega os arquivos treinados pelo framework
     network = cv2.dnn.readNetFromDarknet(
         'yoloDados/yolov3.cfg', 'yoloDados/yolov3.weights')
@@ -96,31 +102,66 @@ def contarPessoas():
                     x_min, y_min = bounding_boxes[i][0], bounding_boxes[i][1]
                     box_width, box_height = bounding_boxes[i][2], bounding_boxes[i][3]
                     colour_box_current = colours[class_numbers[i]].tolist()
-                    cv2.rectangle(frame, (x_min, y_min), (x_min + box_width, y_min + box_height),colour_box_current, 2)
+                    cv2.rectangle(frame, (x_min, y_min), (x_min + box_width, y_min + box_height), colour_box_current, 2)
 
                     # Preparando texto com rótulo e acuracia para o objeto detectado
                     text_box_current = '{}: {:.4f}'.format(labels[int(class_numbers[i])], confidences[i])
 
                     # Coloca o texto nos objetos detectados
-                    cv2.putText(frame, str(pessoas) + text_box_current, (x_min, y_min - 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, colour_box_current, 2)
+                    cv2.putText(frame, str(pessoas) + text_box_current, (x_min, y_min - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                                0.5, colour_box_current, 2)
+
+        #cv2.imshow("janela "+str(number), frame)  # para poder abrir a imagem é preciso da leitura do comando waitKey
+        #k = cv2.waitKey(1)  # caso remova ele, o opencv nao exibe a imagem
+        #if k % 256 == 27:
+            #break
 
 
-        cv2.imshow('YOLO v3 WebCamera', frame)
-        k = cv2.waitKey(1)   # caso remova ele, o opencv nao exibe a imagem
-        if k % 256 == 27:
-            break
+        vetQTD.append(int(pessoas))
+        print(f"{number}-Quantidade Pessoas: {vetQTD}")
+        vet = []
+        global token
+        if token == number:
+            with open('testeCSV.csv', 'a', newline='') as file:# insiro os valores no csv
+                writer = csv.writer(file, delimiter=';', lineterminator='\n')
+                for valores in vetQTD:
+                    writer.writerow([number, valores])  # numero da thread e quantidade
+            vetQTD.clear()
+            with open('testeCSV.csv', 'r', newline='') as file:# leio todos os valores do csv
+                leitor = csv.reader(file, delimiter=';')
+                for values in leitor:
+                    vet.append(int(values[1]))
 
-        #cv2.imwrite("ImagemGerada.png", frame)
-        stop = time.time()
-        tempo = stop - start
-        
-        print("quantidade de pessoas:-> " + str(pessoas))
-        print("tempo: " + str(tempo))
-        #arquivo = open('qtdPessoas.txt', 'w')
-        #arquivo.write(str(pessoas))
-        enviarOsDados(pessoas)
-        #apagarImagem()
-        #del(camera)
+            token = next
+
+        if len(vet) > 1:
+            calculos = Calcular(vet)
+
+            print(f"""\tThread: {number} 
+            Conjunto dos dados: {calculos.valores()}
+            Media: {calculos.media()}
+            Moda: {calculos.moda()}
+            Mediana: {calculos.mediana()}
+            Variancia: {calculos.variancia()}
+            DesvioPadrao: {calculos.desvioPadrao()}
+            Intervalo: {calculos.intervalo()}
+            """)
+
+        # cv2.imwrite("ImagemGerada.png", frame)
+        #stop = time.time()
+        #tempo = stop - start
+
+            #print("quantidade de pessoas:-> " + str(pessoas))
+            #print("tempo: " + str(tempo))
+
+
+
+
+# arquivo = open('qtdPessoas.txt', 'w')
+# arquivo.write(str(pessoas))
+# enviarOsDados(pessoas)
+# apagarImagem()
+# del(camera)
 
 
 def enviarOsDados(qtd):
@@ -129,26 +170,27 @@ def enviarOsDados(qtd):
     payload = {"ip": 12, "quantity": qtd, }
     r = requests.post(url, data=payload)
     print("tempo de envio: ")
-    print(time.time()-start)
+    print(time.time() - start)
 
-    #print(r.text)
+    # print(r.text)
+
 
 # Detectando Objetos em tempo real com OpenCV deep learning library
 
 # Importação das Bibliotecas
 import numpy as np
 import cv2
-import time
-import os
+import matplotlib.pyplot as plt
+from FusaoDeSensores.algoritmos.Calcular import Calcular
 import json
 import requests
 import time
+import csv
 import threading
-
 
 # Loop de captura e detecção dos objetos
 
-contarPessoas()
 
-#threading.Thread(target=contarPessoas).start()
-#threading.Thread(target=enviarOsDados).start()
+#contarPessoas()
+threading.Thread(target=contarPessoas, args=(1, 'v1.mp4', 2, )).start()
+threading.Thread(target=contarPessoas, args=(2, 'v2.mp4', 1, )).start()
